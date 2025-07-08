@@ -11,22 +11,38 @@ You will also need the following functions: -/
 #check mul_assoc
 
 example (a b c : ℝ) : a * b * c = b * (a * c) := by
-  sorry
+  rw[mul_comm a b]
+  rw[mul_assoc]
 
 example (a b c : ℝ) : c * b * a = b * (a * c) := by
-  sorry
+  rw[mul_comm c b]
+  rw[mul_comm a c]
+  rw[mul_assoc b c a]
+
 
 example (a b c : ℝ) : a * (b * c) = b * (a * c) := by
-  sorry
+  rw[← mul_assoc a b c]
+  rw[mul_comm a b]
+  rw[mul_assoc b a c]
+
 
 example (a b c : ℝ) : a * b * c = b * c * a := by
-  sorry
+  rw[mul_comm a b]
+  rw[mul_assoc b a c]
+  rw[mul_comm a c]
+  rw[← mul_assoc b c a]
 
 example (a b c : ℝ) : a * (b * c) = b * (c * a) := by
-  sorry
+  rw[mul_comm b c]
+  rw[← mul_assoc a c b]
+  rw[mul_comm a c]
+  rw[mul_comm (c*a) b]
 
 example (a b c : ℝ) : a * (b * c) = b * (a * c) := by
-  sorry
+rw[← mul_assoc a b c]
+rw[mul_comm a b]
+rw[mul_assoc b a c]
+
 
 example (a b c d e f : ℝ) (h : a * b = c * d) (h' : e = f) : a * (b * e) = c * (d * f) := by
   sorry
