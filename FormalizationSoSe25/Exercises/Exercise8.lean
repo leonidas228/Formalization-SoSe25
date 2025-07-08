@@ -65,8 +65,8 @@ Your definition should be motivated by what
 addition and multiplication of natural numbers should be.
 -/
 def add : MyNat → MyNat → MyNat
-  | x, zero => sorry
-  | x, succ y => sorry
+  | x, zero => x
+  | x, succ y => add x y
 
 /-
 Uncomment the following if you have defined `add`.
@@ -77,8 +77,8 @@ It should give us `MyNat.succ (MyNat.succ (MyNat.zero))`
 -/
 
 def mul : MyNat → MyNat → MyNat
-  | _ , zero => sorry
-  | x, succ y => sorry
+  | _ , zero => zero
+  | x, succ y => mul x y
 
 
 /-

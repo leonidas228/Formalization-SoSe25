@@ -22,21 +22,71 @@ section contradiction
 
 -- This first one should not require `by_contra`.
 example (P : Prop) (h : P) : ¬¬P := by
-  sorry
+  by_contra hp
+  apply hp
+  exact h
+
+
 
 example (P : Prop) (h : ¬¬P) : P := by
-  sorry
+  by_contra hp
+  apply h
+  exact hp
 
 example (P : Prop) : (P → ¬P) → ¬P := by
-  sorry
+  intro h
+  by_contra hp
+  have q:= h hp
+  exact q hp
+
 
 -- Let's prove the famous De Morgan's laws.
 -- Note these two are harder than the three previous ones.
 example (P Q : Prop) : ¬ (P ∨ Q) ↔ ¬P ∧ ¬Q := by
-  sorry
+  constructor
+  . intro h
+    constructor
+    . by_contra hp
+      apply h
+      left
+      exact hp
+    . by_contra hq
+      apply h
+      right
+      exact hq
+  . intro h
+    by_contra hpq
+    rcases hpq with hp | hq
+    exact h.1 hp
+    exact h.2 hq
+
+
+
+
+
 
 example (P Q : Prop) : ¬ (P ∧ Q) ↔ ¬P ∨ ¬Q := by
-  sorry
+  constructor
+  . intro h
+    by_contra hpq
+    apply h
+    constructor
+    . by_contra hp
+      apply hpq
+      left
+      exact hp
+    . by_contra hq
+      apply hpq
+      right
+      exact hq
+  . intro h
+    rcases h with hp | hq
+    . by_contra hpq
+      obtain ⟨hpp,hqq⟩ := hpq
+      apply hp hpp
+    . by_contra hpq
+      apply hq hpq.2
+
 
 end contradiction
 
@@ -53,13 +103,73 @@ section indexed_operations
 -/
 
 example {α I : Type} (A : I → Set α)  (s : Set α) : (s ∩ ⋃ i, A i) = ⋃ i, A i ∩ s := by
-  sorry
+  ext a
+  constructor
+  . rw [Set.mem_inter_iff]
+    rw [Set.mem_iUnion]
+    intro h
+    rw [Set.mem_iUnion]
+    obtain ⟨hs,i,hai⟩ := h
+    use i
+    constructor
+    . exact hai
+    . exact hs
+  . rw [Set.mem_iUnion]
+    rw [Set.mem_inter_iff]
+    rw [Set.mem_iUnion]
+    intro h
+    obtain ⟨i,ha,hs⟩  := h
+    constructor
+    . exact hs
+    . use i
+
 
 example {α I : Type} (A B : I → Set α) : (⋂ i, A i ∩ B i) = (⋂ i, A i) ∩ ⋂ i, B i := by
-  sorry
+  ext a
+  constructor
+  . rw [Set.mem_iInter]
+    rw [Set.mem_inter_iff]
+    rw [Set.mem_iInter]
+    rw [Set.mem_iInter]
+    intro h
+    constructor
+    . intro i
+      have f:= h i
+      exact f.1
+    . intro i
+      have g:= h i
+      exact g.2
+  . rw [Set.mem_iInter]
+    rw [Set.mem_inter_iff]
+    rw [Set.mem_iInter]
+    rw [Set.mem_iInter]
+    intro h
+    obtain ⟨hA,hB⟩ := h
+    intro i
+    have f := hA i
+    have g := hB i
+    constructor
+    . exact f
+    . exact g
 
 example {α I : Type} (A : I → Set α) (s : Set α) : (s ∪ ⋂ i, A i) = ⋂ i, A i ∪ s := by
-  sorry
+  ext a
+  constructor
+  . rw [Set.mem_iInter]
+    intro h
+    intro i
+    rcases h with hs | hA
+    . right
+      exact hs
+    . left
+      have f := Set.mem_iInter.1 hA
+      exact f i
+  . rw [Set.mem_iInter]
+    intro h
+
+
+
+
 
 end indexed_operations
 
